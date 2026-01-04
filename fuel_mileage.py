@@ -49,24 +49,25 @@ def list_entries(): # Def to list all entries in the CSV file
     if not CSV_PATH.exists(): # Check if the CSV file exists
         print("No entries yet. Add one first.")
         return
-    with CSV_PATH.open("r", encoding="utf-8") as f: # Open the CSV file for reading
-        reader = csv.reader(f) # Create a CSV reader object
+    with CSV_PATH.open("r", newline="", encoding="utf-8") as f: # Open the CSV file for reading
+        reader = csv.DictReader(f) # Create a CSV DictReader object
         rows = list(reader) # Read all rows into a list
-    if len(rows) <= 1: # double-check if there are any data rows
+        headers = reader.fieldnames or [] # Get the header names
+    if not rows: # If there are no data rows, then prompt
         print("No entries yet. Add one first.")
         return
-    headers = rows[0] # Get the header row
-    print(" | ".join(headers)) # Print the header row to the screen
-    for i, r in enumerate(rows[1:], start=1): # Loop through each data row
-        print(f"{i}) " + " | ".join(r)) # and print it with an index and a separator "|"
-        return rows
+    print(" | ".join(headers)) # Print the header row with a separator "|"
+    for i, row in enumerate(rows, start=1): # Loop through each data row
+        values = [row.get(h, "") for h in headers] # Get the values for each header
+        print(f"{i}) " + " | ".join(values)) # Print each row with its index and a separator "|"
+    return rows
 
 def read_rows(): # Def to read all rows from the CSV file and return them as a list
     if not CSV_PATH.exists(): # Check if the CSV file exists
         return None
-    with CSV_PATH.open("r", encoding="utf-8") as f: # Open the CSV file for reading
-        reader = csv.reader(f) # Create a CSV reader object
-        return list(reader) # Read all rows into a list and return it
+    with CSV_PATH.open("r", newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        return list(reader)
 
 def stats(): # Def to calculate and display simple statistics from the CSV file
     if not CSV_PATH.exists(): # Check if the CSV file exists
