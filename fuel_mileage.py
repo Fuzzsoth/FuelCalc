@@ -5,6 +5,7 @@
 import csv # for CSV file handling
 import argparse # for command-line argument parsing
 from datetime import datetime
+from zoneinfo import ZoneInfo 
 from pathlib import Path
 
 CSV_PATH = Path(__file__).parent / "mileage_log.csv" # Set the default CSV file path
@@ -113,7 +114,7 @@ def interactive_add(): # Def for interactive addition of a new entry
             car = input("Car (e.g., 'Toyota Camry'): ").strip() # Otherwise prompt user to enter a new car name
     else:
         car = input("Car (e.g., 'Toyota Camry'): ").strip() # Otherwise prompt user to enter a new car name
-    date = input(f"Date (YYYY-MM-DD) [default {datetime.today().date()}]: ").strip() or str(datetime.today().date()) # Prompt user for date with default to today
+    date = input(f"Date (DD/MM/YYYY) [default {datetime.now().strftime('%d/%m/%Y')}]: ").strip() # Prompt user for date with default to today
     distance = input("Distance since last fill (km): ").strip() # Prompt user for distance in km
     fuel = input("Fuel added (litres): ").strip() # Prompt user for fuel in litres
     notes = input("Notes (weather, location, etc.) [optional]: ").strip() # Prompt user for optional notes
